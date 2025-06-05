@@ -12,6 +12,13 @@ public class SignUp : MonoBehaviour
     public Text errorWindowText;
     public Text informationText;
 
+    private void OnEnable()
+    {
+        foreach (var field in inputFields)
+        {
+            field.text = "";
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +39,7 @@ public class SignUp : MonoBehaviour
         // 빈칸이 존재한다면
         if(id =="" && name == "" && password == "" && passwordConf == "" )
         {
-            Error("정보를 확인해주세요.");
+            GameManager.Instance.Error("정보를 확인해주세요.");
             return;
         }
         else if(password != passwordConf)
@@ -75,15 +82,10 @@ public class SignUp : MonoBehaviour
         GameManager.Instance.SaveUserData();
 
         // 회원가입 완료창
-        Error("회원가입이 완료되었습니다.");
+        GameManager.Instance.Error("회원가입이 완료되었습니다.");
 
         // 현재 창 비활성화
         this.gameObject.SetActive(false);
-    }
-    public void Error(string value)
-    {
-        errorWindow.gameObject.SetActive(true);
-        errorWindowText.text = value;
     }
     void ChangeData(string id, string name, string password)
     {
@@ -92,7 +94,7 @@ public class SignUp : MonoBehaviour
         GameManager.Instance.userData.ChangeUserName(name);
         GameManager.Instance.userData.ChangePassword(password);
         GameManager.Instance.userData.ChangeCash(100000);
-        GameManager.Instance.userData.ChangeBalance(50000);
+        GameManager.Instance.userData.ChangeBalance(50000);       
     }
     // 영어와 숫자만 허용
     public bool IsValidId(string input)

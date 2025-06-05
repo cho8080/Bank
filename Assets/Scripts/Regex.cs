@@ -12,14 +12,18 @@ public class Regex : MonoBehaviour
     {
         texts[0].text = GameManager.Instance.userData.Balance.ToString();
         texts[1].text = GameManager.Instance.userData.Cash.ToString();
+
         StartRegex();
     }
     public void StartRegex()
     {
         for (int i = 0; i < texts.Length; i++)
         {
-            numbers[i] = int.Parse(texts[i].text);
-            texts[i].text = numbers[i].ToString("N0");
+           
+            texts[i].text = texts[i].text.Replace(",", ""); // 쉼표 제거
+
+            numbers[i] = int.Parse(texts[i].text); // 숫자로 변환
+            texts[i].text = numbers[i].ToString("N0");// 다시 쉼표 붙여서 출력
         }
     }
 }

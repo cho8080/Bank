@@ -13,34 +13,37 @@ public class PopupBank : MonoBehaviour
     public GameObject withDraw;
     public GameObject remittance;
 
-    public TMP_InputField[] inputFields = new TMP_InputField[2];
-
+    // 입금, 출금, 송금 입력창
+    public InputField[] inputFields = new InputField[4];
     public GameObject impossibleWindow; // 불가능 창
+  
     private void Start()
     {
         regex = GetComponent<Regex>();
     }
+    // 패널 열기
     public void DepositOpen()
     {
-        rightPanel.SetActive(false);
-        deposit.SetActive(true);
-        withDraw.SetActive(false);
-        remittance.SetActive(false);
+        OpenPanel("deposit");
     }
     public void WithDrawOpen()
     {
-        rightPanel.SetActive(false);
-        deposit.SetActive(false);
-        withDraw.SetActive(true);
-        remittance.SetActive(false);
+        OpenPanel("withDraw");
     }
     public void RemittanceOpen()
     {
-        rightPanel.SetActive(false);
-        deposit.SetActive(false);
-        withDraw.SetActive(false);
-        remittance.SetActive(true);
+        OpenPanel("remittance");
     }
+    // 입금, 출금, 송금 패널 열기
+    public void OpenPanel(string panelName)
+    {
+        rightPanel.SetActive(false);
+
+        deposit.SetActive(panelName == "deposit");
+        withDraw.SetActive(panelName == "withDraw");
+        remittance.SetActive(panelName == "remittance");
+    }
+    // 뒤로 가기 버튼 클릭
     public void BackBtn()
     {
         if (deposit.activeSelf == true)
@@ -128,6 +131,56 @@ public class PopupBank : MonoBehaviour
         // 데이터 저장
         GameManager.Instance.SaveUserData();
     }
+    // 송금 버튼 클릭
+    public void RemittanceClick()
+    {
+        // 송글할 사람 이름 가져옴
+        string id = inputFields[2].text;
+        string money = inputFields[3].text;
+
+        // 입력값이 존재하는지 체크
+        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(money)) 
+        { GameManager.Instance.Error("입력 정보를 확인해주세요."); return;}
+
+        //  송금 금액 입력값이 숫자가 아닌지 체크
+        if (!int.TryParse(money, out int inputValue)) 
+        { GameManager.Instance.Error("숫자를 입력해주세요."); return; }
+
+        // 잔액 확인
+        if (!Impossible(GameManager.Instance.userData.Balance, int.Parse(money))) { GameManager.Instance.Error("잔액이 부족합니다."); return; }
+
+        // 송금
+        Remittance(id, int.Parse(money));
+    }
+    // 송금
+    public void Remittance(string id, int money)
+    {
+        bool found = false;
+
+        // 내 현금 줄어듦
+        GameManager.Instance.userData.ChangeBalance(GameManager.Instance.userData.Balance - money);
+
+        // 상대방 현금 올라감
+        for (int i = 0; i < GameManager.Instance.allUsers.Count; i++)
+        {
+         
+            if (GameManager.Instance.allUsers[i].Id == id)
+            {
+                found = true;
+
+                GameManager.Instance.allUsers[i].ChangeBalance(GameManager.Instance.allUsers[i].Balance + money);
+                // 데이터 저장
+                GameManager.Instance.SaveUserData();
+                // 입금 단위 별로 , 출력
+                regex.LoadMooney();
+                break;
+            }
+        }
+        
+        // 송금할 사람의 아이디가 존재하는지 검사
+        if (!found) { GameManager.Instance.Error("대상이 없습니다."); return; }
+    }
+
     // 잔액이 충분한지 확인
     bool Impossible(int a, int b)
     {
