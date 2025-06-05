@@ -1,0 +1,40 @@
+# ========== 기본 Unity 무시 목록 ==========
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+
+# ========== Visual Studio 관련 ==========
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# ========== OS 및 기타 환경 ==========
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# ========== Burst 및 바이너리 파일 ==========
+*.dll
+*.exe
+*.so
+*.dylib
+*.pdb
+
+# ========== Git LFS와 충돌 가능 파일 ==========
+*.zip
+*.7z
+*.rar
+.vs/
