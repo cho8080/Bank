@@ -5,7 +5,7 @@ Unity 2D로 제작한 Bank System 포트폴리오이다. 이 게임은 Json Util
 
 [ 사용 기술 요약 ]
 
-Json Utility를 활용한 데이터 저장 시스템
+Json을 활용한 데이터 저장 시스템
 
 [ 트러블 슈팅 ]
 
